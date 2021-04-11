@@ -6,8 +6,8 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://132.232.168.184:3306/ry?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
+                url: jdbc:mysql://139.196.174.167:3306/ry?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: ssw
                 password: ssw110120
             # 从库数据源
             slave:
