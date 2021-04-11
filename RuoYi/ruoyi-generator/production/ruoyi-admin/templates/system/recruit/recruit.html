@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('招聘信息列表')" />
+    <style type="text/css">table {table-layout:auto;}
+    .div1{ white-space: nowrap; overflow: hidden; overflow-x: scroll; -webkit-backface-visibility: hidden; -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+
+                        <li>
+                            <label>岗位名称：</label>
+                            <input type="text" name="postName"/>
+                        </li>
+                        <li>
+                            <label>年龄要求：</label>
+                            <select name="ageDemand" th:with="type=${@dict.getType('age_demand')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>性别要求：</label>
+                            <select name="genderDemand" th:with="type=${@dict.getType('gender_demand')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+
+                        <li>
+                            <label>是否有厂车：</label>
+                            <select name="haveCar" th:with="type=${@dict.getType('yes_no')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>案底限制：</label>
+                            <select name="andiLimit" th:with="type=${@dict.getType('yes_no')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>体检要求：</label>
+                            <select name="testDemand" th:with="type=${@dict.getType('yes_no')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>纹身要求：</label>
+                            <select name="tattoDemand" th:with="type=${@dict.getType('yes_no')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>无尘衣要求：</label>
+                            <select name="noChenyiDemand" th:with="type=${@dict.getType('yes_no')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>位置：</label>
+                            <input name="address" onclick="selectMap()" readonly="readonly"  required id="address" type="text"
+                                   placeholder="请选择位置">
+                            <input type="hidden"  name="x"  id="x"/>
+                            <input type="hidden"  name="y" id="y"/>
+                        </li>
+                        <li class="select-time">
+                            <label>终止时间：</label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTerminationTime]"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTerminationTime]"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:recruit:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:recruit:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:recruit:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:recruit:import">
+                <i class="fa fa-upload"></i> 导入
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:recruit:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <div class="div1">
+            <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var ageDemandDatas = [[${@dict.getType('age_demand')}]];
+    var genderDemandDatas = [[${@dict.getType('gender_demand')}]];
+    var educationDemandDatas = [[${@dict.getType('education_demand')}]];
+    var editFlag = [[${@permission.hasPermi('system:recruit:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:recruit:remove')}]];
+    var statusDatas = [[${@dict.getType('recruit_state')}]];
+    var haveCarDatas = [[${@dict.getType('yes_no')}]];
+    var nationLimitDatas = [[${@dict.getType('nation_limit')}]];
+    var andiLimitDatas = [[${@dict.getType('yes_no')}]];
+    var testDemandDatas = [[${@dict.getType('yes_no')}]];
+    var tattoDemandDatas = [[${@dict.getType('yes_no')}]];
+    var noChenyiDemandDatas = [[${@dict.getType('yes_no')}]];
+    var gongqiDemandDatas = [[${@dict.getType('yes_no')}]];
+    var prefix = ctx + "system/recruit";
+
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            importUrl: prefix + "/importData",
+            importTemplateUrl: prefix + "/importTemplate",
+            modalName: "招聘信息",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'recruitId',
+                    title: '招聘ID',
+                    visible: false
+                },
+                {
+                    field: 'parentName',
+                    title: '企业名称',
+                    sortable: true,
+                    align: "left",
+                },
+                {
+                    field: 'deptName',
+                    title: '门店名称',
+                    sortable: true,
+                    align: "left",
+                },
+                {
+                    field: 'leader',
+                    title: '企业负责人',
+                    align: "left",
+                },
+                {
+                    field: 'address',
+                    title: '企业地址',
+                    sortable: true,
+                    align: "left",
+                },
+
+                {
+                    field: 'postName',
+                    title: '岗位名称'
+                },
+                {
+                    field: 'recruitPopleNumber',
+                    title: '聘招人数'
+                },
+                {
+                    field: 'terminationTime',
+                    title: '终止时间'
+                },
+
+                {
+                    field: 'workContent',
+                    title: '工作内容',
+                },
+
+                {
+                    field: 'ageDemand',
+                    title: '年龄要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(ageDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'genderDemand',
+                    title: '性别要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(genderDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'educationDemand',
+                    title: '学历要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(educationDemandDatas, value);
+                    }
+                },
+
+                {
+                    field: 'distance',
+                    title: '距离（公里）'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    field: 'haveCar',
+                    title: '是否有厂车',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(haveCarDatas, value);
+                    }
+                },
+                {
+                    field: 'carRoute',
+                    title: '厂车路线'
+                },
+                {
+                    field: 'shisuSituation',
+                    title: '食宿情况'
+                },
+                {
+                    field: 'shisuExplain',
+                    title: '食宿说明'
+                },
+                {
+                    field: 'nationLimit',
+                    title: '民族限制',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(nationLimitDatas, value);
+                    }
+                },
+                {
+                    field: 'andiLimit',
+                    title: '案底限制',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(andiLimitDatas, value);
+                    }
+                },
+                {
+                    field: 'testDemand',
+                    title: '体检要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(testDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'tattoDemand',
+                    title: '纹身要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(tattoDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'noChenyiDemand',
+                    title: '无尘衣要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(noChenyiDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'moneyExplain',
+                    title: '工资说明'
+                },
+                {
+                    field: 'workDays',
+                    title: '需在职天数'
+                },
+                {
+                    field: 'gongqiDemand',
+                    title: '工期要求',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(gongqiDemandDatas, value);
+                    }
+                },
+                {
+                    field: 'jiesuanCost',
+                    title: '算结费用'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.recruitId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.recruitId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    function handle_length_string(str) {
+        if(str!=null){
+            return str.toString().substring(4);
+        }else {
+            return "str";
+        }
+    }
+    /* 招聘查询-新增-选择坐标 */
+    function selectMap() {
+        var url = ctx + "demo/map/simple_map";
+        var options = {
+            title: '选择位置',
+            width: "780",
+            height:"280",
+            url: url,
+            callBack: doSubmit1
+        };
+        $.modal.openOptions(options);
+    }
+    function doSubmit1(index){
+        var body = layer.getChildFrame('body', index);
+        $("#x").val(body.find('#longitude').val());
+        $("#y").val(body.find('#latitude').val());
+        var address=body.find("#province10").val()+body.find("#city10").val()+body.find("#district10").val()+body.find("#cityName").val();
+        $("#address").val(address);
+        layer.close(index);
+    }
+</script>
+</body>
+<!-- 导入区域 -->
+<script id="importTpl" type="text/template">
+    <form enctype="multipart/form-data" class="mt20 mb10">
+        <div class="col-xs-offset-1">
+            <input type="file" id="file" name="file"/>
+            <div class="mt10 pt5">
+                <input type="checkbox" id="updateSupport" name="updateSupport" title="如果登录账户已经存在，更新这条数据。"> 是否更新已经存在的用户数据
+                &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
+            </div>
+            <font color="red" class="pull-left mt10">
+                提示：仅允许导入“xls”或“xlsx”格式文件！
+            </font>
+        </div>
+    </form>
+</script>
+</html>

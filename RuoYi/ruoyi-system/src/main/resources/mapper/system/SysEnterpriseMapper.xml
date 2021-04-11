@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysEnterpriseMapper">
+    
+    <resultMap type="SysEnterprise" id="SysEnterpriseResult">
+        <id     property="deptId"     column="dept_id"     />
+        <result property="parentId"   column="parent_id"   />
+        <result property="enterpriseCode"    column="enterprise_code"    />
+        <result property="ancestors"  column="ancestors"   />
+        <result property="deptName"   column="dept_name"   />
+        <result property="industry"    column="industry"    />
+        <result property="alias"    column="alias"    />
+        <result property="orderNum"   column="order_num"   />
+        <result property="leader"     column="leader"      />
+        <result property="phone"      column="phone"       />
+        <result property="email"      column="email"       />
+        <result property="address"    column="address"    />
+        <result property="coordinate"    column="coordinate"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="status"     column="status"      />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="parentName" column="parent_name" />
+        <result property="createBy"   column="create_by"   />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy"   column="update_by"   />
+        <result property="updateTime" column="update_time" />
+        <result property="remark"    column="remark"    />
+        <result property="enterpriseCreditCode"    column="enterprise_credit_code"    />
+        <result property="costSettlementMethod"    column="cost_settlement_method"    />
+        <result property="cost"    column="cost"    />
+    </resultMap>
+
+    <sql id="selectSysEnterpriseVo">
+        select d.dept_id, d.parent_id,d.enterprise_code, d.industry, d.alias,d.remark, d.ancestors, d.dept_name,
+         d.order_num, d.leader, d.phone, d.email, d.address,concat('纬度：', d.latitude,'，经度：',d.longitude)
+          as coordinate, d.latitude,d.longitude, d.status, d.del_flag, d.create_by, d.create_time,
+          d.enterprise_credit_code, d.cost_settlement_method, d.cost,(select dept_name from sys_dept where dept_id = d.parent_id) as
+           parent_name
+        from sys_dept d
+    </sql>
+
+    <select id="selectSysEnterpriseList" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+        <include refid="selectSysEnterpriseVo"/>
+        where d.del_flag = '0' and parent_id=0
+        <if test="deptName != null and deptName != ''">
+            AND dept_name like concat('%', #{deptName}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="createBy !=null and createBy!=''">
+            AND create_by=#{createBy}
+        </if>
+        <if test="enterpriseCreditCode != null  and enterpriseCreditCode != ''"> and enterprise_credit_code like concat('%', #{enterpriseCreditCode}, '%')</if>
+        <if test="costSettlementMethod != null  and costSettlementMethod != ''"> and cost_settlement_method like concat('%', #{costSettlementMethod}, '%')</if>
+        <!-- 数据范围过滤 -->
+--         ${params.dataScope}
+        order by d.parent_id, d.order_num
+    </select>
+    
+    <select id="selectSysEnterpriseById" parameterType="Long" resultMap="SysEnterpriseResult">
+        <include refid="selectSysEnterpriseVo"/>
+        where dept_id = #{deptId}
+    </select>
+
+    <select id="selectSysEnterpriseByCreateBy" parameterType="String" resultMap="SysEnterpriseResult">
+        <include refid="selectSysEnterpriseVo"/>
+        where create_by = #{createBy} limit 1
+    </select>
+        
+    <insert id="insertSysEnterprise" parameterType="SysEnterprise" useGeneratedKeys="true" keyProperty="deptId">
+        insert into sys_dept(
+        <if test="deptId != null and deptId != 0">dept_id,</if>
+        <if test="parentId != null and parentId != 0">parent_id,</if>
+        <if test="enterpriseCode != null and enterpriseCode != ''">enterprise_code,</if>
+        <if test="deptName != null and deptName != ''">dept_name,</if>
+        <if test="industry != null and industry != ''">industry,</if>
+        <if test="alias != null and alias != ''">alias,</if>
+        <if test="ancestors != null and ancestors != ''">ancestors,</if>
+        <if test="orderNum != null and orderNum != ''">order_num,</if>
+        <if test="leader != null and leader != ''">leader,</if>
+        <if test="phone != null and phone != ''">phone,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="address != null and address != ''">address,</if>
+        <if test="latitude != null and latitude!=''">latitude,</if>
+        <if test="longitude != null and longitude!=''">longitude,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="remark != null">remark,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="enterpriseCreditCode != null">enterprise_credit_code,</if>
+        <if test="costSettlementMethod != null">cost_settlement_method,</if>
+        <if test="cost != null">cost,</if>
+        create_time
+        )values(
+        <if test="deptId != null and deptId != 0">#{deptId},</if>
+        <if test="parentId != null and parentId != 0">#{parentId},</if>
+        <if test="enterpriseCode != null and enterpriseCode != ''">enterprise_code,</if>
+        <if test="deptName != null and deptName != ''">#{deptName},</if>
+        <if test="industry != null and industry != ''">#{industry},</if>
+        <if test="alias != null and alias != ''">#{alias},</if>
+        <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+        <if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+        <if test="leader != null and leader != ''">#{leader},</if>
+        <if test="phone != null and phone != ''">#{phone},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="address != null and address != ''">#{address},</if>
+        <if test="latitude != null and latitude!=''">#{latitude},</if>
+        <if test="longitude != null and longitude!=''">#{longitude},</if>
+        <if test="status != null">#{status},</if>
+        <if test="remark != null">#{remark},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="enterpriseCreditCode != null">#{enterpriseCreditCode},</if>
+        <if test="costSettlementMethod != null">#{costSettlementMethod},</if>
+        <if test="cost != null">#{cost},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateSysEnterprise" parameterType="SysEnterprise">
+        update sys_dept
+        <set>
+            <if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="enterpriseCode != null and enterpriseCode != ''">enterprise_code = #{enterpriseCode},</if>
+            <if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="industry != null and industry != ''">industry = #{industry},</if>
+            <if test="alias != null and alias != ''">alias = #{alias},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="latitude != null and latitude!=''">latitude = #{latitude},</if>
+            <if test="longitude != null and longitude!=''">longitude = #{longitude},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="enterpriseCreditCode != null">enterprise_credit_code = #{enterpriseCreditCode},</if>
+            <if test="costSettlementMethod != null">cost_settlement_method = #{costSettlementMethod},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            update_time = sysdate()
+        </set>
+        where dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteSysEnterpriseById" parameterType="Long">
+        delete from sys_dept where dept_id = #{deptId}
+    </delete>
+
+    <delete id="deleteSysEnterpriseByIds" parameterType="String">
+        delete from sys_dept where dept_id in
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('健康卡列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>登记人：</label>
+                                <input type="text" name="registrant"/>
+                            </li>
+                            <li>
+                                <label>登记编号：</label>
+                                <input type="text" name="registerNo"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.addFull()" id="add" shiro:hasPermission="system:card:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:card:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:card:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:card:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:card:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:card:remove')}]];
+        var questionOneDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionTwoDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionThreeDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionForDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionFiveDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionSixDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionSevenDatas = [[${@dict.getType('sys_yes_no')}]];
+        var questionEightDatas = [[${@dict.getType('sys_yes_no')}]];
+        var prefix = ctx + "system/card";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "健康卡",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'healthCardId',
+                    title: '健康卡ID',
+                    visible: false
+                },
+                {
+                    field: 'registrant',
+                    title: '登记人（教师或学生）',
+                    align: "center"
+                },
+                {
+                    field: 'registerTime',
+                    title: '登记时间',
+                    sortable: true,
+                    align: "center"
+                },
+                {
+                    field: 'registerNo',
+                    title: '登记编号（课程或班级代码）',
+                    align: "center"
+                },
+                {
+                    field: 'questionOne',
+                    title: '本人是否是新冠肺炎的确诊或疑似患者？',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionOneDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionTwo',
+                    title: '本人是否是新冠肺炎患者的密切接触者？',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionTwoDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionThree',
+                    title: '14天内是否从境外回国或来华',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionThreeDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionFor',
+                    title: '14天内是否接触过回国或来华的人员',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionForDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionFive',
+                    title: '14天内有无高、中风险地区旅居史',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionFiveDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionSix',
+                    title: '14天内是否接触过来自高、中风险地区人员',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionSixDatas, value);
+                    },
+                    align: "center"
+                },
+                {
+                    field: 'questionSeven',
+                    title: '14天内本人及家属是否离开过苏州',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(questionSevenDatas, value);
+                    },
+                    align: "center"
+                },
+
+                {
+                    field: 'questionNine',
+                    title: '离开过苏州人姓名'
+                },
+                {
+                    field: 'questionTen',
+                    title: '离开过苏州人地址'
+                },
+                    {
+                        field: 'questionEight',
+                        title: '14天内体温是否正常',
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(questionEightDatas, value);
+                        },
+                        align: "center"
+                    },
+                {
+                    field: 'temperatureOne',
+                    title: '本人温度',
+                    align: "center"
+                },
+                {
+                    field: 'temperatureTwo',
+                    title: '家人1温度',
+                    align: "center"
+                },
+                {
+                    field: 'temperatureThree',
+                    title: '家人2温度',
+                    align: "center"
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.healthCardId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.healthCardId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+            $.operate.addFull();
+        });
+    </script>
+</body>
+</html>

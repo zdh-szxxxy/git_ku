@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysRecruitMapper">
+    
+    <resultMap type="SysRecruit" id="SysRecruitResult">
+        <result property="recruitId"    column="recruit_id"    />
+        <result property="recruitCode"    column="recruit_code"    />
+        <result property="postName"    column="post_name"    />
+        <result property="welfareCharacteristic"    column="welfare_characteristic"    />
+        <result property="multipleSalary"    column="multiple_salary"    />
+        <result property="salaryStandard"    column="salary_standard"    />
+        <result property="payPeriod"    column="pay_period"    />
+        <result property="Payday"    column="Payday"    />
+        <result property="payStructure"    column="pay_structure"    />
+        <result property="foodSituation"    column="food_situation"    />
+        <result property="accommodationSituation"    column="accommodation_situation"    />
+        <result property="insuranceSituation"    column="insurance_situation"    />
+        <result property="otherSituation"    column="other_situation"    />
+        <result property="workContent"    column="work_content"    />
+        <result property="workTime"    column="work_time"    />
+        <result property="workMothed"    column="work_mothed"    />
+        <result property="ageDemand"    column="age_demand"    />
+        <result property="genderDemand"    column="gender_demand"    />
+        <result property="educationDemand"    column="education_demand"    />
+        <result property="otherDemand"    column="other_demand"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="fzr"    column="fzr"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptName"   column="dept_name"   />
+        <result property="industry"    column="industry"    />
+        <result property="leader"     column="leader"      />
+        <result property="address"    column="address"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="parentName" column="parent_name" />
+        <result property="x" column="x" />
+        <result property="y" column="y" />
+        <result property="distance" column="distance" />
+        <result property="recruitPopleNumber"    column="recruit_pople_number"    />
+        <result property="terminationTime"    column="termination_time"    />
+        <result property="haveCar"    column="have_car"    />
+        <result property="carRoute"    column="car_route"    />
+        <result property="shisuSituation"    column="shisu_situation"    />
+        <result property="shisuExplain"    column="shisu_explain"    />
+        <result property="nationLimit"    column="nation_limit"    />
+        <result property="andiLimit"    column="andi_limit"    />
+        <result property="testDemand"    column="test_demand"    />
+        <result property="tattoDemand"    column="tatto_demand"    />
+        <result property="noChenyiDemand"    column="no_chenyi_demand"    />
+        <result property="moneyExplain"    column="money_explain"    />
+        <result property="workDays"    column="work_days"    />
+        <result property="gongqiDemand"    column="gongqi_demand"    />
+        <result property="jiesuanCost"    column="jiesuan_cost"    />
+    </resultMap>
+
+    <sql id="selectSysRecruitVo">
+        select * from ( select  c.industry,c.dept_name,c.leader,c.address,c.latitude,c.longitude,
+        (select dept_name from sys_dept where dept_id = c.parent_id) parent_name,
+        recruit_id, recruit_code, post_name, welfare_characteristic, multiple_salary, salary_standard,
+        pay_period, Payday, pay_structure, food_situation, accommodation_situation, insurance_situation,
+        other_situation, work_content, work_time, work_mothed, age_demand, gender_demand, education_demand,
+        other_demand, a.remark, a.status, a.create_by, a.create_time, a.update_by, a.update_time,b.user_name
+        as fzr , recruit_pople_number, termination_time , have_car, car_route, shisu_situation, shisu_explain,
+        nation_limit, andi_limit, test_demand, tatto_demand, no_chenyi_demand, money_explain, work_days,
+         gongqi_demand , jiesuan_cost from  sys_recruit a left join sys_user b on a.create_by=b.login_name left join sys_dept c on
+        c.dept_id=a.create_by) as  aa
+    </sql>
+
+    <select id="selectSysRecruitList" parameterType="SysRecruit" resultMap="SysRecruitResult">
+        <include refid="selectSysRecruitVo"/>
+        <where>  
+            <if test="recruitCode != null  and recruitCode != ''"> and recruit_code = #{recruitCode}</if>
+            <if test="postName != null  and postName != ''"> and post_name like concat('%', #{postName}, '%')</if>
+            <if test="welfareCharacteristic != null  and welfareCharacteristic != ''"> and welfare_characteristic = #{welfareCharacteristic}</if>
+            <if test="multipleSalary != null  and multipleSalary != ''"> and multiple_salary = #{multipleSalary}</if>
+            <if test="salaryStandard != null  and salaryStandard != ''"> and salary_standard = #{salaryStandard}</if>
+            <if test="payPeriod != null  and payPeriod != ''"> and pay_period = #{payPeriod}</if>
+            <if test="Payday != null  and Payday != ''"> and Payday = #{Payday}</if>
+            <if test="payStructure != null  and payStructure != ''"> and pay_structure = #{payStructure}</if>
+            <if test="foodSituation != null  and foodSituation != ''"> and food_situation = #{foodSituation}</if>
+            <if test="accommodationSituation != null  and accommodationSituation != ''"> and accommodation_situation = #{accommodationSituation}</if>
+            <if test="insuranceSituation != null  and insuranceSituation != ''"> and insurance_situation = #{insuranceSituation}</if>
+            <if test="otherSituation != null  and otherSituation != ''"> and other_situation = #{otherSituation}</if>
+            <if test="workContent != null  and workContent != ''"> and work_content = #{workContent}</if>
+            <if test="workTime != null  and workTime != ''"> and work_time = #{workTime}</if>
+            <if test="workMothed != null  and workMothed != ''"> and work_mothed = #{workMothed}</if>
+            <if test="ageDemand != null and ageDemand!=''"> and age_demand = #{ageDemand}</if>
+            <if test="genderDemand != null and genderDemand!=''"> and gender_demand = #{genderDemand}</if>
+            <if test="educationDemand != null "> and education_demand &gt;= #{educationDemand}</if>
+            <if test="otherDemand != null  and otherDemand != ''"> and other_demand = #{otherDemand}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+<!--            <if test="parentName != null  and parentName != ''"> and (parent_name = #{parentName} or create_by = #{createBy}) </if>-->
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name = #{deptName}</if>
+            <if test="recruitPopleNumber != null "> and recruit_pople_number = #{recruitPopleNumber}</if>
+            <if test="params.beginTerminationTime != null and params.beginTerminationTime != '' and params.endTerminationTime != null and params.endTerminationTime != ''"> and termination_time between #{params.beginTerminationTime} and #{params.endTerminationTime}</if>
+            <if test="haveCar != null  and haveCar != ''"> and have_car = #{haveCar}</if>
+            <if test="shisuSituation != null  and shisuSituation != ''"> and shisu_situation = #{shisuSituation}</if>
+            <if test="andiLimit != null  and andiLimit != ''"> and andi_limit = #{andiLimit}</if>
+            <if test="testDemand != null  and testDemand != ''"> and test_demand = #{testDemand}</if>
+            <if test="tattoDemand != null  and tattoDemand != ''"> and tatto_demand = #{tattoDemand}</if>
+            <if test="noChenyiDemand != null  and noChenyiDemand != ''"> and no_chenyi_demand = #{noChenyiDemand}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysRecruitById" parameterType="Long" resultMap="SysRecruitResult">
+        <include refid="selectSysRecruitVo"/>
+        where recruit_id = #{recruitId}
+    </select>
+        
+    <insert id="insertSysRecruit" parameterType="SysRecruit" useGeneratedKeys="true" keyProperty="recruitId">
+        insert into sys_recruit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recruitCode != null and recruitCode != ''">recruit_code,</if>
+            <if test="postName != null and postName != ''">post_name,</if>
+            <if test="welfareCharacteristic != null and welfareCharacteristic != ''">welfare_characteristic,</if>
+            <if test="multipleSalary != null and multipleSalary != ''">multiple_salary,</if>
+            <if test="salaryStandard != null and salaryStandard != ''">salary_standard,</if>
+            <if test="payPeriod != null and payPeriod != ''">pay_period,</if>
+            <if test="Payday != null and Payday != ''">Payday,</if>
+            <if test="payStructure != null and payStructure != ''">pay_structure,</if>
+            <if test="foodSituation != null and foodSituation != ''">food_situation,</if>
+            <if test="accommodationSituation != null and accommodationSituation != ''">accommodation_situation,</if>
+            <if test="insuranceSituation != null and insuranceSituation != ''">insurance_situation,</if>
+            <if test="otherSituation != null and otherSituation != ''">other_situation,</if>
+            <if test="workContent != null and workContent != ''">work_content,</if>
+            <if test="workTime != null and workTime != ''">work_time,</if>
+            <if test="workMothed != null and workMothed != ''">work_mothed,</if>
+            <if test="ageDemand != null">age_demand,</if>
+            <if test="genderDemand != null">gender_demand,</if>
+            <if test="educationDemand != null">education_demand,</if>
+            <if test="otherDemand != null and otherDemand != ''">other_demand,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="recruitPopleNumber != null">recruit_pople_number,</if>
+            <if test="terminationTime != null">termination_time,</if>
+            <if test="haveCar != null">have_car,</if>
+            <if test="carRoute != null">car_route,</if>
+            <if test="shisuSituation != null">shisu_situation,</if>
+            <if test="shisuExplain != null">shisu_explain,</if>
+            <if test="nationLimit != null">nation_limit,</if>
+            <if test="andiLimit != null">andi_limit,</if>
+            <if test="testDemand != null">test_demand,</if>
+            <if test="tattoDemand != null">tatto_demand,</if>
+            <if test="noChenyiDemand != null">no_chenyi_demand,</if>
+            <if test="moneyExplain != null">money_explain,</if>
+            <if test="workDays != null">work_days,</if>
+            <if test="gongqiDemand != null">gongqi_demand,</if>
+            <if test="jiesuanCost != null">jiesuan_cost,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recruitCode != null and recruitCode != ''">#{recruitCode},</if>
+            <if test="postName != null and postName != ''">#{postName},</if>
+            <if test="welfareCharacteristic != null and welfareCharacteristic != ''">#{welfareCharacteristic},</if>
+            <if test="multipleSalary != null and multipleSalary != ''">#{multipleSalary},</if>
+            <if test="salaryStandard != null and salaryStandard != ''">#{salaryStandard},</if>
+            <if test="payPeriod != null and payPeriod != ''">#{payPeriod},</if>
+            <if test="Payday != null and Payday != ''">#{Payday},</if>
+            <if test="payStructure != null and payStructure != ''">#{payStructure},</if>
+            <if test="foodSituation != null and foodSituation != ''">#{foodSituation},</if>
+            <if test="accommodationSituation != null and accommodationSituation != ''">#{accommodationSituation},</if>
+            <if test="insuranceSituation != null and insuranceSituation != ''">#{insuranceSituation},</if>
+            <if test="otherSituation != null and otherSituation != ''">#{otherSituation},</if>
+            <if test="workContent != null and workContent != ''">#{workContent},</if>
+            <if test="workTime != null and workTime != ''">#{workTime},</if>
+            <if test="workMothed != null and workMothed != ''">#{workMothed},</if>
+            <if test="ageDemand != null and ageDemand != ''">#{ageDemand},</if>
+            <if test="genderDemand != null">#{genderDemand},</if>
+            <if test="educationDemand != null and educationDemand != ''">#{educationDemand},</if>
+            <if test="otherDemand != null and otherDemand != ''">#{otherDemand},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="recruitPopleNumber != null">#{recruitPopleNumber},</if>
+            <if test="terminationTime != null">#{terminationTime},</if>
+            <if test="haveCar != null">#{haveCar},</if>
+            <if test="carRoute != null">#{carRoute},</if>
+            <if test="shisuSituation != null">#{shisuSituation},</if>
+            <if test="shisuExplain != null">#{shisuExplain},</if>
+            <if test="nationLimit != null">#{nationLimit},</if>
+            <if test="andiLimit != null">#{andiLimit},</if>
+            <if test="testDemand != null">#{testDemand},</if>
+            <if test="tattoDemand != null">#{tattoDemand},</if>
+            <if test="noChenyiDemand != null">#{noChenyiDemand},</if>
+            <if test="moneyExplain != null">#{moneyExplain},</if>
+            <if test="workDays != null">#{workDays},</if>
+            <if test="gongqiDemand != null">#{gongqiDemand},</if>
+            <if test="jiesuanCost != null">#{jiesuanCost},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysRecruit" parameterType="SysRecruit">
+        update sys_recruit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recruitCode != null and recruitCode != ''">recruit_code = #{recruitCode},</if>
+            <if test="postName != null and postName != ''">post_name = #{postName},</if>
+            <if test="welfareCharacteristic != null and welfareCharacteristic != ''">welfare_characteristic = #{welfareCharacteristic},</if>
+            <if test="multipleSalary != null and multipleSalary != ''">multiple_salary = #{multipleSalary},</if>
+            <if test="salaryStandard != null and salaryStandard != ''">salary_standard = #{salaryStandard},</if>
+            <if test="payPeriod != null and payPeriod != ''">pay_period = #{payPeriod},</if>
+            <if test="Payday != null and Payday != ''">Payday = #{Payday},</if>
+            <if test="payStructure != null and payStructure != ''">pay_structure = #{payStructure},</if>
+            <if test="foodSituation != null and foodSituation != ''">food_situation = #{foodSituation},</if>
+            <if test="accommodationSituation != null and accommodationSituation != ''">accommodation_situation = #{accommodationSituation},</if>
+            <if test="insuranceSituation != null and insuranceSituation != ''">insurance_situation = #{insuranceSituation},</if>
+            <if test="otherSituation != null and otherSituation != ''">other_situation = #{otherSituation},</if>
+            <if test="workContent != null and workContent != ''">work_content = #{workContent},</if>
+            <if test="workTime != null and workTime != ''">work_time = #{workTime},</if>
+            <if test="workMothed != null and workMothed != ''">work_mothed = #{workMothed},</if>
+            <if test="ageDemand != null">age_demand = #{ageDemand},</if>
+            <if test="genderDemand != null">gender_demand = #{genderDemand},</if>
+            <if test="educationDemand != null">education_demand = #{educationDemand},</if>
+            <if test="otherDemand != null and otherDemand != ''">other_demand = #{otherDemand},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="recruitPopleNumber != null">recruit_pople_number = #{recruitPopleNumber},</if>
+            <if test="terminationTime != null">termination_time = #{terminationTime},</if><if test="haveCar != null">have_car = #{haveCar},</if>
+            <if test="carRoute != null">car_route = #{carRoute},</if>
+            <if test="shisuSituation != null">shisu_situation = #{shisuSituation},</if>
+            <if test="shisuExplain != null">shisu_explain = #{shisuExplain},</if>
+            <if test="nationLimit != null">nation_limit = #{nationLimit},</if>
+            <if test="andiLimit != null">andi_limit = #{andiLimit},</if>
+            <if test="testDemand != null">test_demand = #{testDemand},</if>
+            <if test="tattoDemand != null">tatto_demand = #{tattoDemand},</if>
+            <if test="noChenyiDemand != null">no_chenyi_demand = #{noChenyiDemand},</if>
+            <if test="moneyExplain != null">money_explain = #{moneyExplain},</if>
+            <if test="workDays != null">work_days = #{workDays},</if>
+            <if test="gongqiDemand != null">gongqi_demand = #{gongqiDemand},</if>
+            <if test="jiesuanCost != null">jiesuan_cost = #{jiesuanCost},</if>
+        </trim>
+        where recruit_id = #{recruitId}
+    </update>
+
+    <delete id="deleteSysRecruitById" parameterType="Long">
+        delete from sys_recruit where recruit_id = #{recruitId}
+    </delete>
+
+    <delete id="deleteSysRecruitByIds" parameterType="String">
+        delete from sys_recruit where recruit_id in 
+        <foreach item="recruitId" collection="array" open="(" separator="," close=")">
+            #{recruitId}
+        </foreach>
+    </delete>
+
+</mapper>

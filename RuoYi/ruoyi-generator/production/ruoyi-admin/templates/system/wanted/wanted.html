@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('求职信息列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>求职编码：</label>
+                                <input type="text" name="jobWantedCode"/>
+                            </li>
+                            <li>
+                                <label>岗位要求：</label>
+                                <input type="text" name="postDemand"/>
+                            </li>
+                            <li>
+                                <label>薪水要求：</label>
+                                <input type="text" name="salaryDemand"/>
+                            </li>
+                            <li>
+                                <label>工作时间：</label>
+                                <input type="text" name="timeDemand"/>
+                            </li>
+                            <li>
+                                <label>工作地点：</label>
+                                <input type="text" name="addressDemand"/>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:wanted:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:wanted:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:wanted:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:wanted:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:wanted:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:wanted:remove')}]];
+        var statusDatas = [[${@dict.getType('sys_normal_disable')}]];
+        var prefix = ctx + "system/wanted";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "求职信息",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'jobWantedId',
+                    title: '求职ID',
+                    visible: false
+                },
+                {
+                    field: 'jobWantedCode',
+                    title: '求职编码'
+                },
+                {
+                    field: 'postDemand',
+                    title: '岗位要求'
+                },
+                {
+                    field: 'salaryDemand',
+                    title: '薪水要求'
+                },
+                {
+                    field: 'timeDemand',
+                    title: '工作时间要求'
+                },
+                {
+                    field: 'addressDemand',
+                    title: '工作地点要求'
+                },
+                    {
+                        field: 'jobSeekers',
+                        title: '求职者'
+                    },
+                    {
+                        field: 'phone_number',
+                        title: '电话'
+                    },
+                    {
+                        field: 'email',
+                        title: '邮箱'
+                    },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    field: 'remark',
+                    title: '备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.jobWantedId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.jobWantedId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

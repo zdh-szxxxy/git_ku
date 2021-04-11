@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('招聘信息列表')" />
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>岗位名称：</label>
+                            <input type="text" name="postName"/>
+                            <input type="hidden" name="deptName" th:value="*{deptName}"/>
+                            <input type="hidden" name="createBy" th:value="*{createby}"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:recruit:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:recruit:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll1()" shiro:hasPermission="system:recruit:remove">
+                <i class="fa fa-remove"></i> 分配
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:recruit:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:recruit:remove')}]];
+    var statusDatas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "system/recruit";
+
+    $(function() {
+        var options = {
+            url: prefix + "/distribution_list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/distribution",
+            exportUrl: prefix + "/export",
+            modalName: "招聘信息",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'recruitId',
+                    title: '招聘ID',
+                    visible: false
+                },
+
+                {
+                    field: 'postName',
+                    title: '岗位名称'
+                },
+
+                {
+                    field: 'workContent',
+                    title: '工作内容'
+                },
+                {
+                    field: 'workTime',
+                    title: '工作时间'
+                },
+                {
+                    field: 'workMothed',
+                    title: '工作方式'
+                },
+                {
+                    field: 'ageDemand',
+                    title: '年龄要求'
+                },
+                {
+                    field: 'genderDemand',
+                    title: '性别要求'
+                },
+                {
+                    field: 'educationDemand',
+                    title: '学历要求'
+                },
+
+                {
+                    field: 'distance',
+                    title: '距离（公里）'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(statusDatas, value);
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    /* 招聘查询-新增-选择坐标 */
+    function selectMap() {
+        var url = ctx + "demo/map/simple_map";
+        var options = {
+            title: '选择位置',
+            width: "780",
+            height:"280",
+            url: url,
+            callBack: doSubmit1
+        };
+        $.modal.openOptions(options);
+    }
+    function doSubmit1(index){
+        var body = layer.getChildFrame('body', index);
+        $("#x").val(body.find('#longitude').val());
+        $("#y").val(body.find('#latitude').val());
+        var address=body.find("#province10").val()+body.find("#city10").val()+body.find("#district10").val()+body.find("#cityName").val();
+        $("#address").val(address);
+        layer.close(index);
+    }
+</script>
+</body>
+</html>

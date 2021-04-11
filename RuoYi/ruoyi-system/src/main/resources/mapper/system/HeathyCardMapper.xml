@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HeathyCardMapper">
+    
+    <resultMap type="HeathyCard" id="HeathyCardResult">
+        <result property="healthCardId"    column="health_card_id"    />
+        <result property="registrant"    column="registrant"    />
+        <result property="registerTime"    column="register_time"    />
+        <result property="registerNo"    column="register_no"    />
+        <result property="questionOne"    column="question_one"    />
+        <result property="questionTwo"    column="question_two"    />
+        <result property="questionThree"    column="question_three"    />
+        <result property="questionFor"    column="question_for"    />
+        <result property="questionFive"    column="question_five"    />
+        <result property="questionSix"    column="question_six"    />
+        <result property="questionSeven"    column="question_seven"    />
+        <result property="questionEight"    column="question_eight"    />
+        <result property="questionNine"    column="question_nine"    />
+        <result property="questionTen"    column="question_ten"    />
+        <result property="temperatureOne"    column="temperature_one"    />
+        <result property="temperatureTwo"    column="temperature_two"    />
+        <result property="temperatureThree"    column="temperature_three"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectHeathyCardVo">
+        select health_card_id, registrant, register_time, register_no, question_one, question_two, question_three, question_for, question_five, question_six, question_seven, question_eight, question_nine, question_ten, temperature_one, temperature_two, temperature_three, create_by, create_time from heathy_card
+    </sql>
+
+    <select id="selectHeathyCardList" parameterType="HeathyCard" resultMap="HeathyCardResult">
+        <include refid="selectHeathyCardVo"/>
+        <where>  
+            <if test="registrant != null  and registrant != ''"> and registrant = #{registrant}</if>
+            <if test="registerNo != null  and registerNo != ''"> and register_no = #{registerNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectHeathyCardById" parameterType="Long" resultMap="HeathyCardResult">
+        <include refid="selectHeathyCardVo"/>
+        where health_card_id = #{healthCardId}
+    </select>
+        
+    <insert id="insertHeathyCard" parameterType="HeathyCard" useGeneratedKeys="true" keyProperty="healthCardId">
+        insert into heathy_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="registrant != null and registrant != ''">registrant,</if>
+            <if test="registerTime != null">register_time,</if>
+            <if test="registerNo != null and registerNo != ''">register_no,</if>
+            <if test="questionOne != null and questionOne != ''">question_one,</if>
+            <if test="questionTwo != null and questionTwo != ''">question_two,</if>
+            <if test="questionThree != null and questionThree != ''">question_three,</if>
+            <if test="questionFor != null and questionFor != ''">question_for,</if>
+            <if test="questionFive != null and questionFive != ''">question_five,</if>
+            <if test="questionSix != null and questionSix != ''">question_six,</if>
+            <if test="questionSeven != null and questionSeven != ''">question_seven,</if>
+            <if test="questionEight != null and questionEight != ''">question_eight,</if>
+            <if test="questionNine != null">question_nine,</if>
+            <if test="questionTen != null">question_ten,</if>
+            <if test="temperatureOne != null">temperature_one,</if>
+            <if test="temperatureTwo != null">temperature_two,</if>
+            <if test="temperatureThree != null">temperature_three,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="registrant != null and registrant != ''">#{registrant},</if>
+            <if test="registerTime != null">#{registerTime},</if>
+            <if test="registerNo != null and registerNo != ''">#{registerNo},</if>
+            <if test="questionOne != null and questionOne != ''">#{questionOne},</if>
+            <if test="questionTwo != null and questionTwo != ''">#{questionTwo},</if>
+            <if test="questionThree != null and questionThree != ''">#{questionThree},</if>
+            <if test="questionFor != null and questionFor != ''">#{questionFor},</if>
+            <if test="questionFive != null and questionFive != ''">#{questionFive},</if>
+            <if test="questionSix != null and questionSix != ''">#{questionSix},</if>
+            <if test="questionSeven != null and questionSeven != ''">#{questionSeven},</if>
+            <if test="questionEight != null and questionEight != ''">#{questionEight},</if>
+            <if test="questionNine != null">#{questionNine},</if>
+            <if test="questionTen != null">#{questionTen},</if>
+            <if test="temperatureOne != null">#{temperatureOne},</if>
+            <if test="temperatureTwo != null">#{temperatureTwo},</if>
+            <if test="temperatureThree != null">#{temperatureThree},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHeathyCard" parameterType="HeathyCard">
+        update heathy_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registrant != null and registrant != ''">registrant = #{registrant},</if>
+            <if test="registerTime != null">register_time = #{registerTime},</if>
+            <if test="registerNo != null and registerNo != ''">register_no = #{registerNo},</if>
+            <if test="questionOne != null and questionOne != ''">question_one = #{questionOne},</if>
+            <if test="questionTwo != null and questionTwo != ''">question_two = #{questionTwo},</if>
+            <if test="questionThree != null and questionThree != ''">question_three = #{questionThree},</if>
+            <if test="questionFor != null and questionFor != ''">question_for = #{questionFor},</if>
+            <if test="questionFive != null and questionFive != ''">question_five = #{questionFive},</if>
+            <if test="questionSix != null and questionSix != ''">question_six = #{questionSix},</if>
+            <if test="questionSeven != null and questionSeven != ''">question_seven = #{questionSeven},</if>
+            <if test="questionEight != null and questionEight != ''">question_eight = #{questionEight},</if>
+            <if test="questionNine != null">question_nine = #{questionNine},</if>
+            <if test="questionTen != null">question_ten = #{questionTen},</if>
+            <if test="temperatureOne != null">temperature_one = #{temperatureOne},</if>
+            <if test="temperatureTwo != null">temperature_two = #{temperatureTwo},</if>
+            <if test="temperatureThree != null">temperature_three = #{temperatureThree},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where health_card_id = #{healthCardId}
+    </update>
+
+    <delete id="deleteHeathyCardById" parameterType="Long">
+        delete from heathy_card where health_card_id = #{healthCardId}
+    </delete>
+
+    <delete id="deleteHeathyCardByIds" parameterType="String">
+        delete from heathy_card where health_card_id in 
+        <foreach item="healthCardId" collection="array" open="(" separator="," close=")">
+            #{healthCardId}
+        </foreach>
+    </delete>
+
+</mapper>

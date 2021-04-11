@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增招聘信息')" />
+    <th:block th:include="include :: summernote-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-recruit-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">招聘编码：</label>
+                <div class="col-sm-8">
+                    <input name="recruitCode" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">岗位名称：</label>
+                <div class="col-sm-8">
+                    <input name="postName" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">聘招人数：</label>
+                <div class="col-sm-8">
+                    <input name="recruitPopleNumber" class="form-control" type="number" min="1" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">终止时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="terminationTime" class="form-control" placeholder="yyyy-MM-dd" type="date" required>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">福利特色：</label>
+                <div class="col-sm-8">
+                    <input name="welfareCharacteristic" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">综合薪资：</label>
+                <div class="col-sm-8">
+                    <input name="multipleSalary" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">资薪标准：</label>
+                <div class="col-sm-8">
+                    <input name="salaryStandard" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">发薪周期：</label>
+                <div class="col-sm-8">
+                    <input name="payPeriod" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">发薪日：</label>
+                <div class="col-sm-8">
+                    <input name="Payday" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">资薪结构：</label>
+                <div class="col-sm-8">
+                    <input name="payStructure" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">伙食情况：</label>
+                <div class="col-sm-8">
+                    <input name="foodSituation" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">住宿情况：</label>
+                <div class="col-sm-8">
+                    <input name="accommodationSituation" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">社保情况：</label>
+                <div class="col-sm-8">
+                    <input name="insuranceSituation" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">其他福利：</label>
+                <div class="col-sm-8">
+                    <input name="otherSituation" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">工作内容：</label>
+                <div class="col-sm-8">
+                    <input type="hidden" class="form-control" name="workContent">
+                    <div class="summernote" id="workContent"></div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">工作时间：</label>
+                <div class="col-sm-8">
+                    <input name="workTime" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">工作方式：</label>
+                <div class="col-sm-8">
+                    <input name="workMothed" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">年龄要求：</label>
+                <div class="col-sm-8">
+                    <select name="ageDemand" class="form-control m-b" th:with="type=${@dict.getType('age_demand')}" required>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">性别要求：</label>
+                <div class="col-sm-8">
+                    <select name="genderDemand" class="form-control m-b" th:with="type=${@dict.getType('gender_demand')}" required>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">学历要求：</label>
+                <div class="col-sm-8">
+                    <select name="educationDemand" class="form-control m-b" th:with="type=${@dict.getType('education_demand')}" required>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">其他要求：</label>
+                <div class="col-sm-8">
+                    <input name="otherDemand" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('recruit_state')}">
+                        <input type="radio" th:id="${'status_' + dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}" required>
+                        <label th:for="${'status_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否有厂车：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'haveCar_' + dict.dictCode}" name="haveCar" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'haveCar_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">厂车路线：</label>
+                <div class="col-sm-8">
+                    <textarea name="carRoute" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">食宿情况：</label>
+                <div class="col-sm-8">
+                    <textarea name="shisuSituation" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">食宿说明：</label>
+                <div class="col-sm-8">
+                    <textarea name="shisuExplain" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">民族限制：</label>
+                <div class="col-sm-8">
+                    <select name="nationLimit" class="form-control m-b" th:with="type=${@dict.getType('nation_limit')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">案底限制：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'andiLimit_' + dict.dictCode}" name="andiLimit" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'andiLimit_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">体检要求：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'testDemand_' + dict.dictCode}" name="testDemand" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'testDemand_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">纹身要求：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'tattoDemand_' + dict.dictCode}" name="tattoDemand" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'tattoDemand_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">无尘衣要求：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'noChenyiDemand_' + dict.dictCode}" name="noChenyiDemand" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'noChenyiDemand_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">工资说明：</label>
+                <div class="col-sm-8">
+                    <textarea name="moneyExplain" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">需在职天数：</label>
+                <div class="col-sm-8">
+                    <input name="workDays" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">工期要求：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('yes_no')}">
+                        <input type="radio" th:id="${'gongqiDemand_' + dict.dictCode}" name="gongqiDemand" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'gongqiDemand_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label required">算结费用：</label>
+                <div class="col-sm-8">
+                    <input name="jiesuanCost" class="form-control" type="number" required min="0">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: summernote-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/recruit"
+        $("#form-recruit-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-recruit-add').serialize());
+            }
+        }
+
+        $(function() {
+            $('.summernote').summernote({
+                lang: 'zh-CN',
+                callbacks: {
+                    onChange: function(contents, $edittable) {
+                        $("input[name='" + this.id + "']").val(contents);
+                    },
+                    onImageUpload: function(files) {
+                        var obj = this;
+                    	var data = new FormData();
+                    	data.append("file", files[0]);
+                    	$.ajax({
+                            type: "post",
+                            url: ctx + "common/upload",
+                    		data: data,
+                    		cache: false,
+                    		contentType: false,
+                    		processData: false,
+                    		dataType: 'json',
+                    		success: function(result) {
+                    		    if (result.code == web_status.SUCCESS) {
+                    		        $('#' + obj.id).summernote('insertImage', result.url);
+                    		    } else {
+                    		        $.modal.alertError(result.msg);
+                    		    }
+                    		},
+                    		error: function(error) {
+                    		    $.modal.alertWarning("图片上传失败。");
+                    		}
+                    	});
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
