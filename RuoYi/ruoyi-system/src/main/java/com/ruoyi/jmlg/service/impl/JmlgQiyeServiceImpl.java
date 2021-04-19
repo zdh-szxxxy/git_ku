@@ -39,9 +39,20 @@ public class JmlgQiyeServiceImpl implements IJmlgQiyeService
      * @return 企业信息
      */
     @Override
-    public JmlgQiye selectJmlgQiyeByQiyeXinyongDaima(JmlgQiye jmlgQiye)
+    public List<JmlgQiye> selectJmlgQiyeByQiyeXinyongDaima(JmlgQiye jmlgQiye)
     {
         return jmlgQiyeMapper.selectJmlgQiyeByQiyeXinyongDaima(jmlgQiye);
+    }
+    /**
+     * 查询企业信息列表
+     *
+     * @param jmlgQiye 企业信息
+     * @return 企业信息
+     */
+    @Override
+    public List<JmlgQiye> selectJmlgQiyeByQiyeMingcheng(JmlgQiye jmlgQiye)
+    {
+        return jmlgQiyeMapper.selectJmlgQiyeByQiyeMingcheng(jmlgQiye);
     }
     /**
      * 查询企业信息列表

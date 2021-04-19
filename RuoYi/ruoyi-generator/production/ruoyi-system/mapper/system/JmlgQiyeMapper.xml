@@ -50,10 +50,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectJmlgQiyeVo"/>
         <where>
             and qiye_xinyong_daima = #{qiyeXinyongDaima}
-            and id!=#{qiyeId}
+            and id!=#{id}
         </where>
     </select>
-        
+    <select id="selectJmlgQiyeByQiyeMingcheng" parameterType="JmlgQiye" resultMap="JmlgQiyeResult">
+        <include refid="selectJmlgQiyeVo"/>
+        <where>
+            and qiye_mingcheng = #{qiyeMingcheng}
+            and id!=#{id}
+        </where>
+    </select>
     <insert id="insertJmlgQiye" parameterType="JmlgQiye" useGeneratedKeys="true" keyProperty="id">
         insert into jmlg_qiye
         <trim prefix="(" suffix=")" suffixOverrides=",">

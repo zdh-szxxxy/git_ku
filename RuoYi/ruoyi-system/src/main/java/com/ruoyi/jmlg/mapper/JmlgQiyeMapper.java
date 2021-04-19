@@ -31,7 +31,14 @@ public interface JmlgQiyeMapper
      * @param jmlgQiye 企业信息
      * @return 企业信息
      */
-    public JmlgQiye selectJmlgQiyeByQiyeXinyongDaima(JmlgQiye jmlgQiye);
+    public List<JmlgQiye> selectJmlgQiyeByQiyeMingcheng(JmlgQiye jmlgQiye);
+    /**
+     * 查询企业信息列表
+     *
+     * @param jmlgQiye 企业信息
+     * @return 企业信息
+     */
+    public List<JmlgQiye> selectJmlgQiyeByQiyeXinyongDaima(JmlgQiye jmlgQiye);
     /**
      * 查询企业信息列表
      *

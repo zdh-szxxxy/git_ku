@@ -89,8 +89,14 @@ public class JmlgQiyeController extends BaseController
     @ResponseBody
     public AjaxResult addSave(JmlgQiye jmlgQiye)
     {
-        if(jmlgQiyeService.selectJmlgQiyeByQiyeXinyongDaima(jmlgQiye)!=null){
+        jmlgQiye.setId(new Long(0));
+        List<JmlgQiye> list=jmlgQiyeService.selectJmlgQiyeByQiyeXinyongDaima(jmlgQiye);
+        if(list.size()>0){
             return error("新增企业失败，企业信用代码已存在");
+        }
+        List<JmlgQiye> list1=jmlgQiyeService.selectJmlgQiyeByQiyeMingcheng(jmlgQiye);
+        if(list1.size()>0){
+            return error("新增企业失败，企业名称已存在");
         }
         jmlgQiye.setChuangjianrenId(ShiroUtils.getUserId());
         jmlgQiye.setChuangjianShijian(new Date());
