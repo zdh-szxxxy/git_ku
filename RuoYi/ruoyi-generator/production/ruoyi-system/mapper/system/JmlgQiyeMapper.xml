@@ -19,12 +19,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="feiyong"    column="feiyong"    />
         <result property="status"    column="status"    />
         <result property="chuangjianrenId"    column="chuangjianren_id"    />
+        <result property="chuangjianren"    column="chuangjianren"    />
         <result property="chuangjianShijian"    column="chuangjian_shijian"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectJmlgQiyeVo">
-        select id, qiye_xinyong_daima, qiye_mingcheng, hangye, bieming, dianhua, dizhi, weidu, jingdu, qiye_zuobiao, jiesuan_fangshi, feiyong, status, chuangjianren_id, chuangjian_shijian, remark from jmlg_qiye
+        select a.* ,b.user_name as chuangjianren from jmlg_qiye a join sys_user b on a.chuangjianren_id=b.user_id
     </sql>
 
     <select id="selectJmlgQiyeList" parameterType="JmlgQiye" resultMap="JmlgQiyeResult">

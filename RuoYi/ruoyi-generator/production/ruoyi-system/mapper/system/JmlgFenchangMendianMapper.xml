@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jmlg.mapper.JmlgFenchangMendianMapper">
+    
+    <resultMap type="JmlgFenchangMendian" id="JmlgFenchangMendianResult">
+        <result property="id"    column="id"    />
+        <result property="qiyeId"    column="qiye_id"    />
+        <result property="qiyeMingcheng"    column="qiye_mingcheng"    />
+        <result property="leibie"    column="leibie"    />
+        <result property="mingcheng"    column="mingcheng"    />
+        <result property="fuzeren"    column="fuzeren"    />
+        <result property="lianxiDianhua"    column="lianxi_dianhua"    />
+        <result property="youxiang"    column="youxiang"    />
+        <result property="dizhi"    column="dizhi"    />
+        <result property="jingdu"    column="jingdu"    />
+        <result property="weidu"    column="weidu"    />
+        <result property="zuobiao"    column="zuobiao"    />
+        <result property="zhuangtai"    column="zhuangtai"    />
+        <result property="chuangjianrenId"    column="chuangjianren_id"    />
+        <result property="chuangjianren"    column="chuangjianren"    />
+        <result property="changjianShijian"    column="changjian_shijian"    />
+    </resultMap>
+
+    <sql id="selectJmlgFenchangMendianVo">
+        select a.*,b.qiye_mingcheng,c.user_name as chuangjianren from jmlg_fenchang_mendian a join  jmlg_qiye b on a.qiye_id=b.id
+         join sys_user c on a.chuangjianren_id=c.user_id
+    </sql>
+
+    <select id="selectJmlgFenchangMendianList" parameterType="JmlgFenchangMendian" resultMap="JmlgFenchangMendianResult">
+        <include refid="selectJmlgFenchangMendianVo"/>
+        <where>  
+            <if test="mingcheng != null  and mingcheng != ''"> and mingcheng like concat('%', #{mingcheng}, '%')</if>
+            <if test="fuzeren != null  and fuzeren != ''"> and fuzeren like concat('%', #{fuzeren}, '%')</if>
+            <if test="dizhi != null  and dizhi != ''"> and dizhi like concat('%', #{dizhi}, '%')</if>
+            <if test="zhuangtai != null  and zhuangtai != ''"> and zhuangtai = #{zhuangtai}</if>
+            <if test="params.beginChangjianShijian != null and params.beginChangjianShijian != '' and params.endChangjianShijian != null and params.endChangjianShijian != ''"> and changjian_shijian between #{params.beginChangjianShijian} and #{params.endChangjianShijian}</if>
+            <if test="leibie != null  and leibie != ''"> and leibie = #{leibie}</if>
+        </where>
+    </select>
+    
+    <select id="selectJmlgFenchangMendianById" parameterType="Long" resultMap="JmlgFenchangMendianResult">
+        <include refid="selectJmlgFenchangMendianVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertJmlgFenchangMendian" parameterType="JmlgFenchangMendian" useGeneratedKeys="true" keyProperty="id">
+        insert into jmlg_fenchang_mendian
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qiyeId != null">qiye_id,</if>
+            <if test="mingcheng != null">mingcheng,</if>
+            <if test="fuzeren != null">fuzeren,</if>
+            <if test="lianxiDianhua != null">lianxi_dianhua,</if>
+            <if test="youxiang != null">youxiang,</if>
+            <if test="dizhi != null">dizhi,</if>
+            <if test="jingdu != null">jingdu,</if>
+            <if test="weidu != null">weidu,</if>
+            <if test="zuobiao != null">zuobiao,</if>
+            <if test="zhuangtai != null">zhuangtai,</if>
+            <if test="chuangjianrenId != null">chuangjianren_id,</if>
+            <if test="changjianShijian != null">changjian_shijian,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qiyeId != null">#{qiyeId},</if>
+            <if test="mingcheng != null">#{mingcheng},</if>
+            <if test="fuzeren != null">#{fuzeren},</if>
+            <if test="lianxiDianhua != null">#{lianxiDianhua},</if>
+            <if test="youxiang != null">#{youxiang},</if>
+            <if test="dizhi != null">#{dizhi},</if>
+            <if test="jingdu != null">#{jingdu},</if>
+            <if test="weidu != null">#{weidu},</if>
+            <if test="zuobiao != null">#{zuobiao},</if>
+            <if test="zhuangtai != null">#{zhuangtai},</if>
+            <if test="chuangjianrenId != null">#{chuangjianrenId},</if>
+            <if test="changjianShijian != null">#{changjianShijian},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJmlgFenchangMendian" parameterType="JmlgFenchangMendian">
+        update jmlg_fenchang_mendian
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qiyeId != null">qiye_id = #{qiyeId},</if>
+            <if test="mingcheng != null">mingcheng = #{mingcheng},</if>
+            <if test="fuzeren != null">fuzeren = #{fuzeren},</if>
+            <if test="lianxiDianhua != null">lianxi_dianhua = #{lianxiDianhua},</if>
+            <if test="youxiang != null">youxiang = #{youxiang},</if>
+            <if test="dizhi != null">dizhi = #{dizhi},</if>
+            <if test="jingdu != null">jingdu = #{jingdu},</if>
+            <if test="weidu != null">weidu = #{weidu},</if>
+            <if test="zuobiao != null">zuobiao = #{zuobiao},</if>
+            <if test="zhuangtai != null">zhuangtai = #{zhuangtai},</if>
+            <if test="chuangjianrenId != null">chuangjianren_id = #{chuangjianrenId},</if>
+            <if test="changjianShijian != null">changjian_shijian = #{changjianShijian},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteJmlgFenchangMendianById" parameterType="Long">
+        delete from jmlg_fenchang_mendian where id = #{id}
+    </delete>
+
+    <delete id="deleteJmlgFenchangMendianByIds" parameterType="String">
+        delete from jmlg_fenchang_mendian where a.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

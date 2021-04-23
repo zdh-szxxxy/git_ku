@@ -56,7 +56,14 @@ public class JmlgQiyeController extends BaseController
         List<JmlgQiye> list = jmlgQiyeService.selectJmlgQiyeList(jmlgQiye);
         return getDataTable(list);
     }
-
+    /**
+     * 选择企业信息列表
+     */
+    @GetMapping("/selectQiye")
+    public String selectQiye()
+    {
+        return prefix+"/selectQiye";
+    }
     /**
      * 导出企业信息列表
      */
@@ -123,6 +130,14 @@ public class JmlgQiyeController extends BaseController
     @ResponseBody
     public AjaxResult editSave(JmlgQiye jmlgQiye)
     {
+        List<JmlgQiye> list=jmlgQiyeService.selectJmlgQiyeByQiyeXinyongDaima(jmlgQiye);
+        if(list.size()>0){
+            return error("编辑企业失败，企业信用代码已存在");
+        }
+        List<JmlgQiye> list1=jmlgQiyeService.selectJmlgQiyeByQiyeMingcheng(jmlgQiye);
+        if(list1.size()>0){
+            return error("编辑企业失败，企业名称已存在");
+        }
         return toAjax(jmlgQiyeService.updateJmlgQiye(jmlgQiye));
     }
 

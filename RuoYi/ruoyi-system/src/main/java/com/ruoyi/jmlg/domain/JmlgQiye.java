@@ -72,7 +72,9 @@ public class JmlgQiye extends BaseEntity
     /** 创建人id */
     @Excel(name = "创建人id")
     private Long chuangjianrenId;
-
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String chuangjianren;
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -203,6 +205,15 @@ public class JmlgQiye extends BaseEntity
     public Long getChuangjianrenId() 
     {
         return chuangjianrenId;
+    }
+    public void setChuangjianren(String chuangjianren)
+    {
+        this.chuangjianren = chuangjianren;
+    }
+
+    public String getChuangjianren()
+    {
+        return chuangjianren;
     }
     public void setChuangjianShijian(Date chuangjianShijian) 
     {

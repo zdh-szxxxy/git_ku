@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('职位信息列表')" />
+    <style type="text/css">table {table-layout:auto;}
+    .div1{ white-space: nowrap; overflow: hidden; overflow-x: scroll; -webkit-backface-visibility: hidden; -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>名称：</label>
+                                <input type="text" name="mingcheng"/>
+                            </li>
+                            <li>
+                                <label>包吃：</label>
+                                <select name="baochi" th:with="type=${@dict.getType('sys_yes_no')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>包住：</label>
+                                <select name="baozhu" th:with="type=${@dict.getType('sys_yes_no')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>性别要求：</label>
+                                <select name="xingbieYaoqiu" th:with="type=${@dict.getType('gender_demand')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>年龄要求：</label>
+                                <select name="nianlingYaoqiu" th:with="type=${@dict.getType('age_demand')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>经验要求：</label>
+                                <select name="jingyanYaoqiu" th:with="type=${@dict.getType('jingyan_yaoqiu')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>学历要求：</label>
+                                <select name="xueliYaoqiu" th:with="type=${@dict.getType('education_demand')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="jmlg:zhiwei:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="jmlg:zhiwei:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="jmlg:zhiwei:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="jmlg:zhiwei:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <div class="div1">
+                    <table id="bootstrap-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('jmlg:zhiwei:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('jmlg:zhiwei:remove')}]];
+        var xinziLeixingDatas = [[${@dict.getType('jmlg_xinzi_leixing')}]];
+        var baochiDatas = [[${@dict.getType('sys_yes_no')}]];
+        var baozhuDatas = [[${@dict.getType('sys_yes_no')}]];
+        var jiesuanFangshiDatas = [[${@dict.getType('jiesuan_fangshi')}]];
+        var chuanWuchenyiDatas = [[${@dict.getType('sys_yes_no')}]];
+        var kouyaDatas = [[${@dict.getType('kouya')}]];
+        var xingbieYaoqiuDatas = [[${@dict.getType('gender_demand')}]];
+        var nianlingYaoqiuDatas = [[${@dict.getType('age_demand')}]];
+        var jingyanYaoqiuDatas = [[${@dict.getType('jingyan_yaoqiu')}]];
+        var xueliYaoqiuDatas = [[${@dict.getType('education_demand')}]];
+        var prefix = ctx + "jmlg/zhiwei";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "职位信息",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '记录id',
+                    visible: false
+                },
+                {
+                    field: 'gongchangMendian',
+                    title: '分厂门店'
+                },
+                    {
+                        field: 'mingcheng',
+                        title: '名称'
+                    },
+                {
+                    field: 'xinziLeixing',
+                    title: '薪资类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(xinziLeixingDatas, value);
+                    }
+                },
+                {
+                    field: 'xinzi',
+                    title: '薪资'
+                },
+                {
+                    field: 'baochi',
+                    title: '包吃',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(baochiDatas, value);
+                    }
+                },
+                {
+                    field: 'baozhu',
+                    title: '包住',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(baozhuDatas, value);
+                    }
+                },
+                {
+                    field: 'jiesuanFangshi',
+                    title: '结算方式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(jiesuanFangshiDatas, value);
+                    }
+                },
+                {
+                    field: 'chuanWuchenyi',
+                    title: '穿无尘衣',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(chuanWuchenyiDatas, value);
+                    }
+                },
+                {
+                    field: 'zhaopinRenshu',
+                    title: '招聘人数'
+                },
+                {
+                    field: 'gongqi',
+                    title: '工期'
+                },
+                {
+                    field: 'kouya',
+                    title: '扣押',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(kouyaDatas, value);
+                    }
+                },
+                {
+                    field: 'xingbieYaoqiu',
+                    title: '性别要求',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(xingbieYaoqiuDatas, value);
+                    }
+                },
+                {
+                    field: 'nianlingYaoqiu',
+                    title: '年龄要求',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(nianlingYaoqiuDatas, value);
+                    }
+                },
+                {
+                    field: 'jingyanYaoqiu',
+                    title: '经验要求',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(jingyanYaoqiuDatas, value);
+                    }
+                },
+                {
+                    field: 'xueliYaoqiu',
+                    title: '学历要求',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(xueliYaoqiuDatas, value);
+                    }
+                },
+                {
+                    field: 'mianshiCailiao',
+                    title: '面试材料'
+                },
+                {
+                    field: 'mianshiShijian',
+                    title: '面试时间'
+                },
+                {
+                    field: 'xinziJiegou',
+                    title: '薪资结构'
+                },
+                {
+                    field: 'xinziShuoming',
+                    title: '薪资说明'
+                },
+                {
+                    field: 'chifanShuoming',
+                    title: '吃饭说明'
+                },
+                {
+                    field: 'zhusuShuoming',
+                    title: '住宿说明'
+                },
+                {
+                    field: 'changcheXianlu',
+                    title: '厂车线路'
+                },
+                {
+                    field: 'zhiweiMiaoshu',
+                    title: '职位描述'
+                },
+                    {
+                        field: 'chuangjianren',
+                        title: '创建人'
+                    },
+                {
+                    field: 'chaungjianShijian',
+                    title: '创建时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

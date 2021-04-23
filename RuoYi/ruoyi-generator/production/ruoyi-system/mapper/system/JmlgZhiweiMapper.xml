@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jmlg.mapper.JmlgZhiweiMapper">
+    
+    <resultMap type="JmlgZhiwei" id="JmlgZhiweiResult">
+        <result property="id"    column="id"    />
+        <result property="gongchangMendianId"    column="gongchang_mendian_id"    />
+        <result property="gongchangMendian"    column="gongchang_mendian"    />
+        <result property="mingcheng"    column="mingcheng"    />
+        <result property="xinziLeixing"    column="xinzi_leixing"    />
+        <result property="xinzi"    column="xinzi"    />
+        <result property="baochi"    column="baochi"    />
+        <result property="baozhu"    column="baozhu"    />
+        <result property="jiesuanFangshi"    column="jiesuan_fangshi"    />
+        <result property="chuanWuchenyi"    column="chuan_wuchenyi"    />
+        <result property="zhaopinRenshu"    column="zhaopin_renshu"    />
+        <result property="gongqi"    column="gongqi"    />
+        <result property="kouya"    column="kouya"    />
+        <result property="xingbieYaoqiu"    column="xingbie_yaoqiu"    />
+        <result property="nianlingYaoqiu"    column="nianling_yaoqiu"    />
+        <result property="jingyanYaoqiu"    column="jingyan_yaoqiu"    />
+        <result property="xueliYaoqiu"    column="xueli_yaoqiu"    />
+        <result property="mianshiCailiao"    column="mianshi_cailiao"    />
+        <result property="mianshiShijian"    column="mianshi_shijian"    />
+        <result property="xinziJiegou"    column="xinzi_jiegou"    />
+        <result property="xinziShuoming"    column="xinzi_shuoming"    />
+        <result property="chifanShuoming"    column="chifan_shuoming"    />
+        <result property="zhusuShuoming"    column="zhusu_shuoming"    />
+        <result property="changcheXianlu"    column="changche_xianlu"    />
+        <result property="zhiweiMiaoshu"    column="zhiwei_miaoshu"    />
+        <result property="chuangjianrenId"    column="chuangjianren_id"    />
+        <result property="chuangjianren"    column="chuangjianren"    />
+        <result property="chaungjianShijian"    column="chaungjian_shijian"    />
+    </resultMap>
+
+    <sql id="selectJmlgZhiweiVo">
+        select a.*,concat(c.qiye_mingcheng,"-",b.mingcheng)  as gongchang_mendian,d.user_name as chuangjianren
+         from jmlg_zhiwei a join jmlg_fenchang_mendian
+         b on a.gongchang_mendian_id=b.id join jmlg_qiye c on b.qiye_id=c.id join sys_user d on a.chuangjianren_id=
+         d.user_id
+    </sql>
+
+    <select id="selectJmlgZhiweiList" parameterType="JmlgZhiwei" resultMap="JmlgZhiweiResult">
+        <include refid="selectJmlgZhiweiVo"/>
+        <where>  
+            <if test="mingcheng != null  and mingcheng != ''"> and mingcheng like concat('%', #{mingcheng}, '%')</if>
+            <if test="baochi != null  and baochi != ''"> and baochi = #{baochi}</if>
+            <if test="baozhu != null  and baozhu != ''"> and baozhu = #{baozhu}</if>
+            <if test="xingbieYaoqiu != null  and xingbieYaoqiu != ''"> and xingbie_yaoqiu = #{xingbieYaoqiu}</if>
+            <if test="nianlingYaoqiu != null  and nianlingYaoqiu != ''"> and nianling_yaoqiu = #{nianlingYaoqiu}</if>
+            <if test="jingyanYaoqiu != null  and jingyanYaoqiu != ''"> and jingyan_yaoqiu = #{jingyanYaoqiu}</if>
+            <if test="xueliYaoqiu != null  and xueliYaoqiu != ''"> and xueli_yaoqiu = #{xueliYaoqiu}</if>
+        </where>
+    </select>
+    
+    <select id="selectJmlgZhiweiById" parameterType="Long" resultMap="JmlgZhiweiResult">
+        <include refid="selectJmlgZhiweiVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertJmlgZhiwei" parameterType="JmlgZhiwei" useGeneratedKeys="true" keyProperty="id">
+        insert into jmlg_zhiwei
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gongchangMendianId != null">gongchang_mendian_id,</if>
+            <if test="mingcheng != null and mingcheng != ''">mingcheng,</if>
+            <if test="xinziLeixing != null and xinziLeixing != ''">xinzi_leixing,</if>
+            <if test="xinzi != null">xinzi,</if>
+            <if test="baochi != null and baochi != ''">baochi,</if>
+            <if test="baozhu != null and baozhu != ''">baozhu,</if>
+            <if test="jiesuanFangshi != null and jiesuanFangshi != ''">jiesuan_fangshi,</if>
+            <if test="chuanWuchenyi != null and chuanWuchenyi != ''">chuan_wuchenyi,</if>
+            <if test="zhaopinRenshu != null">zhaopin_renshu,</if>
+            <if test="gongqi != null">gongqi,</if>
+            <if test="kouya != null and kouya != ''">kouya,</if>
+            <if test="xingbieYaoqiu != null and xingbieYaoqiu != ''">xingbie_yaoqiu,</if>
+            <if test="nianlingYaoqiu != null and nianlingYaoqiu != ''">nianling_yaoqiu,</if>
+            <if test="jingyanYaoqiu != null and jingyanYaoqiu != ''">jingyan_yaoqiu,</if>
+            <if test="xueliYaoqiu != null and xueliYaoqiu != ''">xueli_yaoqiu,</if>
+            <if test="mianshiCailiao != null and mianshiCailiao != ''">mianshi_cailiao,</if>
+            <if test="mianshiShijian != null and mianshiShijian != ''">mianshi_shijian,</if>
+            <if test="xinziJiegou != null and xinziJiegou != ''">xinzi_jiegou,</if>
+            <if test="xinziShuoming != null and xinziShuoming != ''">xinzi_shuoming,</if>
+            <if test="chifanShuoming != null and chifanShuoming != ''">chifan_shuoming,</if>
+            <if test="zhusuShuoming != null and zhusuShuoming != ''">zhusu_shuoming,</if>
+            <if test="changcheXianlu != null and changcheXianlu != ''">changche_xianlu,</if>
+            <if test="zhiweiMiaoshu != null and zhiweiMiaoshu != ''">zhiwei_miaoshu,</if>
+            <if test="chuangjianrenId != null">chuangjianren_id,</if>
+            <if test="chaungjianShijian != null">chaungjian_shijian,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gongchangMendianId != null">#{gongchangMendianId},</if>
+            <if test="mingcheng != null and mingcheng != ''">#{mingcheng},</if>
+            <if test="xinziLeixing != null and xinziLeixing != ''">#{xinziLeixing},</if>
+            <if test="xinzi != null">#{xinzi},</if>
+            <if test="baochi != null and baochi != ''">#{baochi},</if>
+            <if test="baozhu != null and baozhu != ''">#{baozhu},</if>
+            <if test="jiesuanFangshi != null and jiesuanFangshi != ''">#{jiesuanFangshi},</if>
+            <if test="chuanWuchenyi != null and chuanWuchenyi != ''">#{chuanWuchenyi},</if>
+            <if test="zhaopinRenshu != null">#{zhaopinRenshu},</if>
+            <if test="gongqi != null">#{gongqi},</if>
+            <if test="kouya != null and kouya != ''">#{kouya},</if>
+            <if test="xingbieYaoqiu != null and xingbieYaoqiu != ''">#{xingbieYaoqiu},</if>
+            <if test="nianlingYaoqiu != null and nianlingYaoqiu != ''">#{nianlingYaoqiu},</if>
+            <if test="jingyanYaoqiu != null and jingyanYaoqiu != ''">#{jingyanYaoqiu},</if>
+            <if test="xueliYaoqiu != null and xueliYaoqiu != ''">#{xueliYaoqiu},</if>
+            <if test="mianshiCailiao != null and mianshiCailiao != ''">#{mianshiCailiao},</if>
+            <if test="mianshiShijian != null and mianshiShijian != ''">#{mianshiShijian},</if>
+            <if test="xinziJiegou != null and xinziJiegou != ''">#{xinziJiegou},</if>
+            <if test="xinziShuoming != null and xinziShuoming != ''">#{xinziShuoming},</if>
+            <if test="chifanShuoming != null and chifanShuoming != ''">#{chifanShuoming},</if>
+            <if test="zhusuShuoming != null and zhusuShuoming != ''">#{zhusuShuoming},</if>
+            <if test="changcheXianlu != null and changcheXianlu != ''">#{changcheXianlu},</if>
+            <if test="zhiweiMiaoshu != null and zhiweiMiaoshu != ''">#{zhiweiMiaoshu},</if>
+            <if test="chuangjianrenId != null">#{chuangjianrenId},</if>
+            <if test="chaungjianShijian != null">#{chaungjianShijian},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJmlgZhiwei" parameterType="JmlgZhiwei">
+        update jmlg_zhiwei
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gongchangMendianId != null">gongchang_mendian_id = #{gongchangMendianId},</if>
+            <if test="mingcheng != null and mingcheng != ''">mingcheng = #{mingcheng},</if>
+            <if test="xinziLeixing != null and xinziLeixing != ''">xinzi_leixing = #{xinziLeixing},</if>
+            <if test="xinzi != null">xinzi = #{xinzi},</if>
+            <if test="baochi != null and baochi != ''">baochi = #{baochi},</if>
+            <if test="baozhu != null and baozhu != ''">baozhu = #{baozhu},</if>
+            <if test="jiesuanFangshi != null and jiesuanFangshi != ''">jiesuan_fangshi = #{jiesuanFangshi},</if>
+            <if test="chuanWuchenyi != null and chuanWuchenyi != ''">chuan_wuchenyi = #{chuanWuchenyi},</if>
+            <if test="zhaopinRenshu != null">zhaopin_renshu = #{zhaopinRenshu},</if>
+            <if test="gongqi != null">gongqi = #{gongqi},</if>
+            <if test="kouya != null and kouya != ''">kouya = #{kouya},</if>
+            <if test="xingbieYaoqiu != null and xingbieYaoqiu != ''">xingbie_yaoqiu = #{xingbieYaoqiu},</if>
+            <if test="nianlingYaoqiu != null and nianlingYaoqiu != ''">nianling_yaoqiu = #{nianlingYaoqiu},</if>
+            <if test="jingyanYaoqiu != null and jingyanYaoqiu != ''">jingyan_yaoqiu = #{jingyanYaoqiu},</if>
+            <if test="xueliYaoqiu != null and xueliYaoqiu != ''">xueli_yaoqiu = #{xueliYaoqiu},</if>
+            <if test="mianshiCailiao != null and mianshiCailiao != ''">mianshi_cailiao = #{mianshiCailiao},</if>
+            <if test="mianshiShijian != null and mianshiShijian != ''">mianshi_shijian = #{mianshiShijian},</if>
+            <if test="xinziJiegou != null and xinziJiegou != ''">xinzi_jiegou = #{xinziJiegou},</if>
+            <if test="xinziShuoming != null and xinziShuoming != ''">xinzi_shuoming = #{xinziShuoming},</if>
+            <if test="chifanShuoming != null and chifanShuoming != ''">chifan_shuoming = #{chifanShuoming},</if>
+            <if test="zhusuShuoming != null and zhusuShuoming != ''">zhusu_shuoming = #{zhusuShuoming},</if>
+            <if test="changcheXianlu != null and changcheXianlu != ''">changche_xianlu = #{changcheXianlu},</if>
+            <if test="zhiweiMiaoshu != null and zhiweiMiaoshu != ''">zhiwei_miaoshu = #{zhiweiMiaoshu},</if>
+            <if test="chuangjianrenId != null">chuangjianren_id = #{chuangjianrenId},</if>
+            <if test="chaungjianShijian != null">chaungjian_shijian = #{chaungjianShijian},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteJmlgZhiweiById" parameterType="Long">
+        delete from jmlg_zhiwei where id = #{id}
+    </delete>
+
+    <delete id="deleteJmlgZhiweiByIds" parameterType="String">
+        delete from jmlg_zhiwei where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

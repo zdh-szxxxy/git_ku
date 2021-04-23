@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('企业信息列表')" />
+    <style type="text/css">
+        table {table-layout:auto;}
+        .div1{ white-space: nowrap; overflow: hidden; overflow-x: scroll; -webkit-backface-visibility: hidden;
+            -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>信用代码：</label>
+                            <input type="text" name="qiyeXinyongDaima"/>
+                        </li>
+                        <li>
+                            <label>企业名称：</label>
+                            <input type="text" name="qiyeMingcheng"/>
+                        </li>
+                        <li>
+                            <label>别名：</label>
+                            <input type="text" name="bieming"/>
+                        </li>
+                        <li class="select-time">
+                            <label>创建时间：</label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginChuangjianShijian]"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endChuangjianShijian]"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <div class="div1">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:qiye:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:qiye:remove')}]];
+    var hangyeDatas = [[${@dict.getType('hangye')}]];
+    var jiesuanFangshiDatas = [[${@dict.getType('jiesuan_fangshi')}]];
+    var statusDatas = [[${@dict.getType('sys_job_status')}]];
+    var prefix = ctx + "jmlg/qiye";
+
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "企业信息",
+            columns: [{
+                radio: true
+            },
+                {
+                    field: 'id',
+                    title: '记录id',
+                    visible: false
+                },
+                {
+                    field: 'qiyeXinyongDaima',
+                    title: '企业信用代码'
+                },
+                {
+                    field: 'qiyeMingcheng',
+                    title: '企业名称'
+                },
+                {
+                    field: 'hangye',
+                    title: '行业',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(hangyeDatas, value);
+                    }
+                },
+                {
+                    field: 'bieming',
+                    title: '别名'
+                },
+                {
+                    field: 'dianhua',
+                    title: '电话'
+                },
+                ]
+        };
+        $.table.init(options);
+    });
+    /* 添加用户-选择用户-提交 */
+    function submitHandler(index, layero) {
+        var rows = $.table.selectFirstColumns();
+        if (rows.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $.modal.close();
+        parent.$('#qiyeMingcheng').val($.table.selectColumns("qiyeMingcheng"));
+        parent.$('#qiyeId').val($.table.selectColumns("id"));
+    }
+</script>
+</body>
+</html>
